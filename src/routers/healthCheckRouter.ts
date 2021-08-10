@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { enviroment } from "../common/enviroment";
 const router = Router();
-const basePath = "/healthCheck";
 
 router.get("/", async (req, res) => {
   res.send({

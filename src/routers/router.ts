@@ -1,4 +1,4 @@
-import healthCheckRouter = require("./healthCheckRouter");
+const healthCheckRouter = require("./healthCheckRouter");
 const userRouter = require("./userRouter");
 import { Application, Router } from "express";
 

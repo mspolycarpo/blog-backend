@@ -4,10 +4,8 @@ const router = Router();
 
 router.post("/", async (req, res, next) => {
   try {
-    console.log(req.body);
     const newUser = await User.create(req.body);
-    console.log(newUser);
-    res.send("ok");
+    res.status(201).send("ok");
   } catch (e) {
     next(e);
   }

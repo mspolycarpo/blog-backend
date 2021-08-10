@@ -8,5 +8,3 @@ test("Health Check", async () => {
   const res = await request(app).get(basePath);
   expect(res.status).toBe(200);
 });
-
-afterAll(() => {});

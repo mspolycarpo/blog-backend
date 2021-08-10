@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import { ValidateEmail } from "../common/validators";
 
 export interface User extends mongoose.Document {
   id: number;
@@ -12,27 +13,26 @@ export interface User extends mongoose.Document {
 
 const userSchema = new mongoose.Schema({
   id: {
-    type: String,
-    required: true,
+    type: mongoose.SchemaTypes.ObjectId,
   },
   displayName: {
     type: String,
     required: true,
-    validate: {
-      validator: function (s) {
-        return s && s.length >= 8;
-      },
-      message: "length must be at least 8 characters long",
-    },
+    minLength: 8,
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator: ValidateEmail,
+      message: "email must be a valid email",
+    },
   },
   password: {
     type: String,
     required: true,
+    minLength: 6,
   },
   image: {
     type: String,

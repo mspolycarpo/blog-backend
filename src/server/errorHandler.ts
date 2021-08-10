@@ -5,7 +5,9 @@ export const handleError = (err, req, res, next) => {
         err.statusCode = 400;
 
         if (err.keyValue && err.keyValue.email) {
-          res.status(err.statusCode).send({ message: "Usuário já existe" });
+          res
+            .status(err.statusCode)
+            .send({ name: err.name, message: "Usuário já existe" });
         } else {
           res.status(err.statusCode).send(err);
         }
@@ -15,7 +17,10 @@ export const handleError = (err, req, res, next) => {
       err.statusCode = 400;
       const messages: any[] = [];
       for (let name in err.errors) {
-        messages.push({ message: err.errors[name].properties.message });
+        messages.push({
+          name: err.name,
+          message: err.errors[name].properties.message,
+        });
       }
       res.status(err.statusCode).send({ messages });
       break;

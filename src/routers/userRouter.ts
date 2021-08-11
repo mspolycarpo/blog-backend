@@ -2,6 +2,7 @@ import { User } from "../models/userModel";
 import { Router } from "express";
 import * as jwt from "jsonwebtoken";
 import { enviroment } from "../common/enviroment";
+import { authenticate } from "../security/authHandler";
 const router = Router();
 
 router.post("/", async (req, res, next) => {
@@ -22,7 +23,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", authenticate, async (req, res, next) => {
   try {
     const users = await User.find({}, { _id: 0, __v: 0 });
     res.send(users);
@@ -31,11 +32,11 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     const users = await User.findOne({ id }, { _id: 0, __v: 0 });
-    res.send(users);
+    res.send(users || { message: "Usuário inexistente" });
   } catch (e) {
     next(e);
   }

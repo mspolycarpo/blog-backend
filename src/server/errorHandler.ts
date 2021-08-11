@@ -27,6 +27,11 @@ export const handleError = (err, req, res, next) => {
     case "UnauthorizedError":
       res.status(400).send({ message: err.message });
       break;
+    case "AuthError":
+      res.status(401).send({ message: err.message });
+      break;
+    case "JsonWebTokenError":
+      res.status(401).send({ message: "Token inválido" });
     default:
       res.status(err.statusCode || 500).send(err);
   }

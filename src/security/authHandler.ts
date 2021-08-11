@@ -8,10 +8,20 @@ export const authenticate = (
   next: NextFunction
 ) => {
   const auth = req.headers.authorization;
-
-  if (auth) {
-  } else {
-    let e = new Error("");
+  try {
+    if (auth) {
+      const token = auth.split(" ")[1];
+      const decoded = jwt.verify(token, enviroment.security.apiSecret);
+      req.body.thisEmail = decoded.sub;
+      next();
+    } else {
+      let e = new Error("Token não encontrado");
+      e.name = AUTH_ERROR;
+      throw e;
+    }
+  } catch (e) {
+    console.log(e);
+    next(e);
   }
 };
 

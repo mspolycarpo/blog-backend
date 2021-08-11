@@ -18,6 +18,7 @@ export interface UserModel extends Model<User> {
 const userSchema = new Schema<User, UserModel>({
   id: {
     type: String,
+    required: true,
   },
   displayName: {
     type: String,

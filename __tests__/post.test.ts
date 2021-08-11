@@ -50,7 +50,7 @@ test("Criação de post - Content é necessário", async () => {
   }
 });
 
-test.only("Consulta posts", async () => {
+test("Consulta posts", async () => {
   try {
     const res = await request(app)
       .get(basePath)
@@ -60,6 +60,43 @@ test.only("Consulta posts", async () => {
       })
       .set("Authorization", Auth);
     expect(res.status).toBe(200);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Consulta posts", async () => {
+  try {
+    await request(app)
+      .post(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    const res = await request(app)
+      .get(`${basePath}/1`)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(200);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Consulta posts - ID não encontrado", async () => {
+  try {
+    const res = await request(app)
+      .get(`${basePath}/9999`)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(404);
   } catch (e) {
     Promise.reject(e);
   }

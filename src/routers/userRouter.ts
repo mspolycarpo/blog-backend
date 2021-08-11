@@ -36,7 +36,8 @@ router.get("/:id", authenticate, async (req, res, next) => {
   try {
     const id = req.params.id;
     const users = await User.findOne({ id }, { _id: 0, __v: 0 });
-    res.send(users || { message: "Usuário inexistente" });
+    const statusCode = users ? 200 : 404;
+    res.status(statusCode).send(users || { message: "Usuário inexistente" });
   } catch (e) {
     next(e);
   }

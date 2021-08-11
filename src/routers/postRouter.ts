@@ -37,4 +37,22 @@ router.get("/", authenticate, async (req, res, next) => {
   }
 });
 
+router.get("/:id", authenticate, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ id: req.params.id }, { _id: 0, __v: 0 });
+    if (!post) {
+      res.status(404).send({ message: "Post não existe" });
+      next();
+    }
+    const user = await User.findOne({ id: post.userId }, { _id: 0, __v: 0 });
+    const postJson = post.toJSON();
+    delete postJson.userId;
+    const populatedPosts = { ...postJson, user };
+
+    res.status(200).send(populatedPosts);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

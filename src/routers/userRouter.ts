@@ -12,7 +12,7 @@ router.post("/", async (req, res, next) => {
     await User.create(req.body);
     const token = jwt.sign(
       {
-        sub: req.body.email,
+        sub: { email: req.body.email, id },
         iss: enviroment.app.name,
       },
       enviroment.security.apiSecret

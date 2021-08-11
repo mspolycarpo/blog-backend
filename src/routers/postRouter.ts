@@ -132,4 +132,25 @@ router.put("/:id", authenticate, async (req, res, next) => {
   }
 });
 
+router.delete("/:id", authenticate, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ id: req.params.id });
+
+    if (!post) {
+      res.status(404).send({ message: "Post não existe" });
+      next();
+    } else if (post.userId !== req.body.userId) {
+      let e = new Error("Usuário não autorizado");
+      e.name = "UserNotAuthorizedError";
+      throw e;
+    }
+
+    await post.delete();
+
+    res.status(204).send();
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

@@ -1,19 +1,23 @@
-import * as mongoose from "mongoose";
+import { Model, Schema, model } from "mongoose";
 import { ValidateEmail } from "../common/validators";
-
-export interface User extends mongoose.Document {
-  id: number;
+import * as bcrypt from "bcrypt";
+import { enviroment } from "../common/enviroment";
+export interface User {
+  id: string;
   displayName: string;
   email: string;
   password: string;
   image: string;
+  matches(password: string): boolean;
 }
 
-// export interface UserModel extends mongoose.Model<User> {}
+export interface UserModel extends Model<User> {
+  findByEmail(email: string, projection?: string): Promise<User>;
+}
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema<User, UserModel>({
   id: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type: String,
   },
   displayName: {
     type: String,
@@ -33,6 +37,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 6,
+    select: false,
   },
   image: {
     type: String,
@@ -40,14 +45,39 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export const User = mongoose.model<User>("User", userSchema);
+userSchema.static("findByEmail", function (email: string, projection: string) {
+  return this.findOne({ email }, projection);
+});
 
-/*
-{
-  "id": "401465483996",
-  "displayName": "Brett Wiltshire",
-  "email": "brett@email.com", // tem quer ser único
-  "password": "123456",
-  "image": "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png"
-}
-*/
+userSchema.methods.matches = function (password: string): boolean {
+  return bcrypt.compareSync(password, this.password);
+};
+
+const hashPassword = async (obj, next) => {
+  try {
+    const hash = await bcrypt.hash(
+      obj.password,
+      enviroment.security.saltRounds
+    );
+
+    obj.password = hash;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+const saveMiddleware = function (next) {
+  // Nao utilizar arrow functions pois e' necessario que a funcao dependa do contexto
+  const user: User = this;
+  try {
+    hashPassword(user, next);
+  } catch {
+    next();
+  }
+};
+
+userSchema.pre("save", saveMiddleware);
+
+export const User = model<User, UserModel>("User", userSchema);

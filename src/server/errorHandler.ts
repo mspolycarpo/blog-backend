@@ -24,7 +24,10 @@ export const handleError = (err, req, res, next) => {
       }
       res.status(err.statusCode).send({ messages });
       break;
+    case "UnauthorizedError":
+      res.status(400).send({ message: err.message });
+      break;
+    default:
+      res.status(err.statusCode || 500).send(err);
   }
-
-  next(err);
 };

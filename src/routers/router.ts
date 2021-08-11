@@ -1,10 +1,12 @@
 const healthCheckRouter = require("./healthCheckRouter");
 const userRouter = require("./userRouter");
+const loginRouter = require("./loginRouter");
 import { Application, Router } from "express";
 
 const _routes: [string, Router][] = [
   ["/healthCheck", healthCheckRouter],
   ["/user", userRouter],
+  ["/login", loginRouter],
 ];
 
 export const routes = (app: Application) => {

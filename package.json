@@ -10,7 +10,8 @@
   },
   "jest": {
     "globals": {
-      "address": "http://localhost:3001"
+      "address": "http://localhost:3001",
+      "auth": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZXUyQGVtYWlsLmNvbSIsImlzcyI6ImJsb2ctYmFja2VuZCIsImlhdCI6MTYyODY1MzE0MX0.Q-gXZMhPvzChxtNkS2JbFbv-pA6CyMsThHUcFyjBBPg"
     },
     "testEnvironment": "node",
     "transform": {

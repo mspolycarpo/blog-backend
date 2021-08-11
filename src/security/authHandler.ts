@@ -20,26 +20,6 @@ export const authenticate = (
       throw e;
     }
   } catch (e) {
-    console.log(e);
     next(e);
-  }
-};
-
-const validate = (email, password) => {
-  let e = new Error();
-  e.name = "UnauthorizedError";
-
-  if (email === undefined) {
-    e.message = "'email' is required";
-    throw e;
-  } else if (email === "") {
-    e.message = "'email' is not allowed to be empty";
-  }
-  if (password === undefined) {
-    e.message = "'password' is required";
-    throw e;
-  } else if (password === "") {
-    e.message = "'email' is not allowed to be empty";
-    throw e;
   }
 };

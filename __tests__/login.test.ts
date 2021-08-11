@@ -15,7 +15,7 @@ test("Login", async () => {
       .send({ email: "meu@email.com", password: "123456" });
     expect(res.statusCode).toBe(200);
   } catch (e) {
-    console.error(e);
+    Promise.reject(e);
   }
 });
 
@@ -24,7 +24,7 @@ test("Login - Email é necessário", async () => {
     const res = await request(app).post(basePath).send({ password: "123456" });
     expect(res.statusCode).toBe(400);
   } catch (e) {
-    console.error(e);
+    Promise.reject(e);
   }
 });
 
@@ -35,7 +35,7 @@ test("Login - Email não pode estar em branco", async () => {
       .send({ email: "", password: "123456" });
     expect(res.statusCode).toBe(400);
   } catch (e) {
-    console.error(e);
+    Promise.reject(e);
   }
 });
 
@@ -46,7 +46,7 @@ test("Login - Password é necessário", async () => {
       .send({ email: "meu@email.com" });
     expect(res.statusCode).toBe(400);
   } catch (e) {
-    console.error(e);
+    Promise.reject(e);
   }
 });
 
@@ -57,7 +57,7 @@ test("Login - Password não pode estar em branco", async () => {
       .send({ email: "meu@email.com", password: "" });
     expect(res.statusCode).toBe(400);
   } catch (e) {
-    console.error(e);
+    Promise.reject(e);
   }
 });
 

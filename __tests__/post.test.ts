@@ -156,7 +156,7 @@ test("Atualiza posts - Sem content", async () => {
   }
 });
 
-test.only("Atualiza posts - usuário não autorizado", async () => {
+test("Atualiza posts - usuário não autorizado", async () => {
   try {
     await request(app)
       .post(basePath)
@@ -173,6 +173,18 @@ test.only("Atualiza posts - usuário não autorizado", async () => {
         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiZW1haWwiOiIyMjIyQGVtYWlsLmNvbSIsImlkIjo2fSwiaXNzIjoiYmxvZy1iYWNrZW5kIiwiaWF0IjoxNjI4NjcwMjcyfQ.FlVeYE3AjfScnOFPUCzHJ3p9dVwiR6DM0WNlhMTLMH4"
       );
     expect(res.status).toBe(401);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Consulta posts - Search", async () => {
+  try {
+    const res = await request(app)
+      .get(`${basePath}/search`)
+      .send()
+      .set("Authorization", Auth);
+    expect(res.status).toBe(200);
   } catch (e) {
     Promise.reject(e);
   }

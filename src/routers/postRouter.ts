@@ -4,6 +4,7 @@ import { enviroment } from "../common/enviroment";
 import { authenticate } from "../security/authHandler";
 import { Post } from "../models/postModel";
 import { User } from "../models/userModel";
+import { FilterQuery } from "mongoose";
 const moment = require("moment");
 const router = Router();
 
@@ -17,6 +18,36 @@ router.post("/", authenticate, async (req, res, next) => {
     await Post.create({ id, title, content, userId, published, updated });
     res.status(201).send({ title, content, userId });
   } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/search", authenticate, async (req, res, next) => {
+  try {
+    const { q }: any = req.query;
+
+    let filter: FilterQuery<Post>;
+    if (q) {
+      filter = {
+        $or: [{ title: { $regex: q } }, { content: { $regex: q } }],
+      };
+    } else {
+      filter = {};
+    }
+
+    const posts = await Post.find(filter, { _id: 0, __v: 0 });
+
+    const populatedPosts = [];
+    for (let post of posts) {
+      const user = await User.findOne({ id: post.userId }, { _id: 0, __v: 0 });
+      let postJson = post.toJSON();
+      delete postJson.userId;
+      populatedPosts.push({ ...postJson, user });
+    }
+
+    res.status(200).send(populatedPosts);
+  } catch (e) {
+    console.error(e);
     next(e);
   }
 });

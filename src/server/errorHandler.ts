@@ -31,7 +31,7 @@ export const handleError = (err, req, res, next) => {
       res.status(401).send({ message: err.message });
       break;
     case "JsonWebTokenError":
-      res.status(401).send({ message: "Token inválido" });
+      res.status(401).send({ message: "Token inválido ou expirado" });
     default:
       res.status(err.statusCode || 500).send(err);
   }

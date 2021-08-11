@@ -50,6 +50,21 @@ test("Criação de post - Content é necessário", async () => {
   }
 });
 
+test.only("Consulta posts", async () => {
+  try {
+    const res = await request(app)
+      .get(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(200);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
 beforeAll(async () => {
   enviroment.db.url = "mongodb://localhost/blog-backend-test-db";
   mongoose.connect(enviroment.db.url, { useNewUrlParser: true });

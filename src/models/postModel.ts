@@ -27,6 +27,7 @@ const postSchema = new Schema<Post, PostModel>({
   userId: {
     type: String,
     required: true,
+    ref: "User",
   },
   published: {
     type: String,

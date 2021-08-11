@@ -19,6 +19,7 @@ const userSchema = new Schema<User, UserModel>({
   id: {
     type: String,
     required: true,
+    ref: "Post",
   },
   displayName: {
     type: String,

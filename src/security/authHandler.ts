@@ -13,7 +13,7 @@ export const authenticate = (
       const token = auth.split(" ")[1];
       const decoded = jwt.verify(token, enviroment.security.apiSecret);
       req.body.thisEmail = decoded.sub.email;
-      req.body.userId = decoded.sub.id;
+      req.body.userId = decoded.sub.id.toString();
       next();
     } else {
       let e = new Error("Token não encontrado");

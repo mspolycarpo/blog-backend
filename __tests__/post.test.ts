@@ -76,10 +76,7 @@ test("Consulta posts", async () => {
       .set("Authorization", Auth);
     const res = await request(app)
       .get(`${basePath}/1`)
-      .send({
-        title: "title teste",
-        content: "content teste",
-      })
+      .send()
       .set("Authorization", Auth);
     expect(res.status).toBe(200);
   } catch (e) {
@@ -97,6 +94,85 @@ test("Consulta posts - ID não encontrado", async () => {
       })
       .set("Authorization", Auth);
     expect(res.status).toBe(404);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Atualiza posts", async () => {
+  try {
+    await request(app)
+      .post(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    const res = await request(app)
+      .put(`${basePath}/1`)
+      .send({ title: "titule", content: "content" })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(200);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Atualiza posts - Sem title", async () => {
+  try {
+    await request(app)
+      .post(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    const res = await request(app)
+      .put(`${basePath}/1`)
+      .send({ content: "content" })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(400);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Atualiza posts - Sem content", async () => {
+  try {
+    await request(app)
+      .post(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    const res = await request(app)
+      .put(`${basePath}/1`)
+      .send({ titule: "tst" })
+      .set("Authorization", Auth);
+    expect(res.status).toBe(400);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test.only("Atualiza posts - usuário não autorizado", async () => {
+  try {
+    await request(app)
+      .post(basePath)
+      .send({
+        title: "title teste",
+        content: "content teste",
+      })
+      .set("Authorization", Auth);
+    const res = await request(app)
+      .put(`${basePath}/1`)
+      .send({ title: "titule", content: "content" })
+      .set(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiZW1haWwiOiIyMjIyQGVtYWlsLmNvbSIsImlkIjo2fSwiaXNzIjoiYmxvZy1iYWNrZW5kIiwiaWF0IjoxNjI4NjcwMjcyfQ.FlVeYE3AjfScnOFPUCzHJ3p9dVwiR6DM0WNlhMTLMH4"
+      );
+    expect(res.status).toBe(401);
   } catch (e) {
     Promise.reject(e);
   }

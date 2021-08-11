@@ -32,6 +32,11 @@ export const handleError = (err, req, res, next) => {
       break;
     case "JsonWebTokenError":
       res.status(401).send({ message: "Token inválido ou expirado" });
+    case "UpdateValidationError":
+      res.status(400).send({ message: err.message });
+    case "UserNotAuthorizedError":
+      res.status(401).send({ message: err.message });
+
     default:
       res.status(err.statusCode || 500).send(err);
   }

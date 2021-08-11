@@ -245,6 +245,63 @@ test("Consulta usuário - Por id - Token Invalido", async () => {
   }
 });
 
+test.only("Deletar Usuário", async () => {
+  try {
+    const res = await request(app).post(basePath).send({
+      displayName: "Brett Wiltshire",
+      email: "bretttt2222@email.com",
+      password: "123456",
+      image:
+        "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png",
+    });
+    const { token } = res.body;
+    const res2 = await request(app)
+      .delete(`${basePath}/me`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res2.status).toBe(204);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Deletar Usuário - Sem Token", async () => {
+  try {
+    const res = await request(app).post(basePath).send({
+      displayName: "Brett Wiltshire",
+      email: "bretttt2222@email.com",
+      password: "123456",
+      image:
+        "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png",
+    });
+
+    const res2 = await request(app).delete(`${basePath}/me`);
+
+    expect(res2.status).toBe(401);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
+test("Deletar Usuário - Token invalido", async () => {
+  try {
+    const res = await request(app).post(basePath).send({
+      displayName: "Brett Wiltshire",
+      email: "bretttt2222@email.com",
+      password: "123456",
+      image:
+        "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png",
+    });
+
+    const res2 = await request(app)
+      .delete(`${basePath}/me`)
+      .set("Authorization", "AAAAA");
+    expect(res2.status).toBe(401);
+  } catch (e) {
+    Promise.reject(e);
+  }
+});
+
 beforeAll(async () => {
   enviroment.db.url = "mongodb://localhost/blog-backend-test-db";
   mongoose.connect(enviroment.db.url, { useNewUrlParser: true });

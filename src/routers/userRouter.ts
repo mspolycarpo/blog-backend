@@ -1,5 +1,5 @@
 import { User } from "../models/userModel";
-import { Router } from "express";
+import { response, Router } from "express";
 import * as jwt from "jsonwebtoken";
 import { enviroment } from "../common/enviroment";
 import { authenticate } from "../security/authHandler";
@@ -37,6 +37,16 @@ router.get("/:id", authenticate, async (req, res, next) => {
     const id = req.params.id;
     const users = await User.findOne({ id }, { _id: 0, __v: 0 });
     res.send(users || { message: "Usuário inexistente" });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.delete("/me", authenticate, async (req, res, next) => {
+  try {
+    const email = req.body.thisEmail;
+    await User.findOneAndDelete({ email });
+    res.status(204).send();
   } catch (e) {
     next(e);
   }
